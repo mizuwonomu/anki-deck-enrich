@@ -88,3 +88,9 @@ Sau đó `/tmp/jp-deck-demo/` sẽ có `synthetic-vocabulary.apkg`, `preview.htm
 
 > [!IMPORTANT]
 > Hiện chỉ có một source adapter được đăng ký (`tango-n1-mimi-n1-v1`), và nó chỉ chấp nhận đúng một snapshot deck đã được ghim bằng hash. Deck khác cần agent researcher và implementer thêm adapter trước. Bản thân bước làm giàu chạy qua các agent, không qua CLI. Validation và đóng gói chỉ kiểm tra cấu trúc và nguồn gốc, không kiểm tra chất lượng ngôn ngữ: build thành công không có nghĩa là lời giải thích tiếng Việt đã đúng. Việc import, reimport và lịch ôn trong Anki thật chưa được kiểm chứng, và repository này không chứa deck thật hay dữ liệu đã dịch nào.
+
+## Trạng thái hiện tại
+
+- **Mới thử nghiệm ở quy mô pilot.** Toàn bộ luồng, từ deck gốc qua làm giàu bằng agent, review, aggregate đến file APKG đã audit, mới chạy trên một pilot 45 note chia thành 2 batch (25 + 20). Chưa thử chạy với nhiều batch hay cả deck.
+- **Chưa có orchestration tự động.** Các agent đang được giao việc thủ công theo từng batch và mỗi stage CLI được chạy tay. Scheduler trong sơ đồ pipeline (chạy song song và chính sách session) mới là đề xuất, chưa có script triển khai.
+- **Chưa có từ trái nghĩa.** Output schema hỗ trợ từ đồng nghĩa, gần nghĩa, từ liên quan và từ dễ nhầm, nhưng chưa có quan hệ trái nghĩa.

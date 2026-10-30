@@ -88,3 +88,9 @@ python -m jp_deck build --config configs/synthetic-demo.yaml --output-dir /tmp/j
 
 > [!IMPORTANT]
 > Only one source adapter is registered (`tango-n1-mimi-n1-v1`), and it accepts one exact deck snapshot pinned by hash. Any other deck needs the researcher and implementer agents to add an adapter first. The enrichment step itself runs through the agents, not the CLI. Validation and packaging check structure and provenance, not language quality: a passing build does not certify a Vietnamese explanation. Live Anki import, reimport and scheduling are not verified, and no real deck or translated data is included in this repository.
+
+## Current status
+
+- **Tested at pilot scale only.** The full flow, from source deck to agent enrichment, review, aggregation and an audited APKG, has run on one 45-note pilot split into 2 batches (25 + 20). Runs with many batches or a full deck have not been tried yet.
+- **No automated orchestration yet.** Agents are dispatched per batch by hand and each CLI stage is run manually. The scheduler in the pipeline diagram (concurrency and session policy) is a proposal, not an implemented script.
+- **No antonyms yet.** The output schema supports synonyms, near-synonyms, related terms and confusables, but not antonyms.
