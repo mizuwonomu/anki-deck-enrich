@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MiMi batch review report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "batch_id", "artifact_path", "artifact_sha256", "scope", "verdict", "records", "limitations"],
+  "properties": {
+    "schema": {"const": "jp-deck-batch-review/v1"},
+    "batch_id": {"type": "string", "minLength": 1},
+    "artifact_path": {"type": "string", "minLength": 1},
+    "artifact_sha256": {"$ref": "#/$defs/hash"},
+    "scope": {"enum": ["structure-and-collocation-attestation/v1", "schema-first-sampled-source/v1"]},
+    "verdict": {"enum": ["pass", "needs_revision", "needs_human_review"]},
+    "source_sample": {"type": "array", "items": {"$ref": "#/$defs/sample"}},
+    "records": {"type": "array", "items": {"$ref": "#/$defs/record"}},
+    "limitations": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [{"if": {"properties": {"scope": {"const": "schema-first-sampled-source/v1"}}, "required": ["scope"]}, "then": {"required": ["source_sample"]}}],
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sample": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_id", "collection", "item_id", "status", "source_url", "observation"],
+      "properties": {
+        "input_id": {"type": "string", "minLength": 1},
+        "collection": {"enum": ["collocations", "examples"]},
+        "item_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["attested", "unverified", "contradicted", "not_checked"]},
+        "source_url": {"anyOf": [{"type": "string", "format": "uri", "pattern": "^https?://"}, {"type": "null"}]},
+        "observation": {"type": "string"}
+      }
+    },
+    "collocation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["collocation_id", "status", "source_url", "observation", "queries_used", "queries"],
+      "properties": {
+        "collocation_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["attested", "unverified", "contradicted", "not_checked"]},
+        "source_url": {"anyOf": [{"type": "string", "format": "uri", "pattern": "^https?://"}, {"type": "null"}]},
+        "observation": {"type": "string"},
+        "queries_used": {"type": "integer", "minimum": 0},
+        "queries": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "structure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "method", "command"],
+      "properties": {"status": {"enum": ["pass", "fail", "not_run"]}, "method": {"type": "string", "minLength": 1}, "command": {"type": "string", "minLength": 1}}
+    },
+    "finding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "category", "issue", "evidence", "requested_action"],
+      "properties": {
+        "path": {"type": "string", "pattern": "^(?:/(?:[^~/]|~[01])*)*$"},
+        "category": {"enum": ["structure", "evidence", "language"]},
+        "severity": {"enum": ["error", "advisory"]},
+        "issue": {"type": "string", "minLength": 1},
+        "evidence": {},
+        "requested_action": {"type": "string", "minLength": 1}
+      }
+    },
+    "record": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_id", "reviewed_revision", "structure", "collocations", "findings", "verdict"],
+      "properties": {
+        "input_id": {"type": "string", "minLength": 1},
+        "reviewed_revision": {"type": "integer", "minimum": 1},
+        "structure": {"$ref": "#/$defs/structure"},
+        "collocations": {"type": "array", "items": {"$ref": "#/$defs/collocation"}},
+        "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+        "verdict": {"enum": ["pass", "needs_revision", "needs_human_review"]}
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+config_version: 1
+paths:
+  input: enriched.jsonl
+  source_input: source.jsonl
+  output_schema: ../../../schemas/output.schema.json
+  input_schema: ../../../schemas/input.schema.json
+  output_dir: ../../../artifacts/synthetic-test-output
+package:
+  apkg_filename: synthetic-vocabulary.apkg
+  model_name: Synthetic Japanese-Vietnamese Test Model
+  model_id: 1848570013
+  deck_name: Synthetic Vocabulary Demo
+  deck_id: 1848570012
+  guid_namespace: jp-deck/public-synthetic-demo/v1
+  stable_id_epoch_seconds: 1800000000.0
+constraints:
+  input_sha256: aad65ee344f1a21bb65561245e931068684c62f5577ff26aaea23681f93fbecd
+  input_ids: [demo-001, demo-002, demo-003, demo-004, demo-005]
+  revision: 1
+  schema_version: 0.1.0

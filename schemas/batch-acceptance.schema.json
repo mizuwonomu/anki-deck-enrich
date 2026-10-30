@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MiMi batch acceptance receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "job_id", "batch_id", "status", "review_scope", "input_manifest", "input", "contract", "schemas", "output", "validation", "review"],
+  "properties": {
+    "schema": {"const": "jp-deck-batch-acceptance/v1"},
+    "job_id": {"type": "string", "minLength": 1},
+    "batch_id": {"type": "string", "minLength": 1},
+    "status": {"const": "accepted"},
+    "review_scope": {"enum": ["structure-and-collocation-attestation/v1", "schema-first-sampled-source/v1"]},
+    "input_manifest": {"$ref": "#/$defs/binding"},
+    "input": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "input_ids"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/hash"}, "input_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}}},
+    "contract": {"$ref": "#/$defs/binding"},
+    "schemas": {"type": "object", "additionalProperties": false, "required": ["input_sha256", "output_sha256"], "properties": {"input_sha256": {"$ref": "#/$defs/hash"}, "output_sha256": {"$ref": "#/$defs/hash"}}},
+    "output": {"type": "object", "additionalProperties": false, "required": ["path", "sha256", "artifact_revision", "record_revisions"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/hash"}, "artifact_revision": {"type": "integer", "minimum": 1}, "record_revisions": {"$ref": "#/$defs/revisions"}}},
+    "validation": {"$ref": "#/$defs/binding"},
+    "review": {"$ref": "#/$defs/binding"},
+    "human_disposition": {"$ref": "#/$defs/binding"}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "binding": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/hash"}}},
+    "revisions": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1}}
+  }
+}

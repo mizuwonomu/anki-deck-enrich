@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Japanese vocabulary input",
+  "description": "One manually prepared source note, not an enriched research record or a native Anki note. Initial contract pending independent review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "expression", "reading", "meaning_vi"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Stable project-owned input ID; unique within the dataset, independent of row position. Not an Anki note ID."
+    },
+    "expression": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Original Japanese vocabulary expression supplied by the user."
+    },
+    "reading": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Original kana reading supplied by the user; not audio. Linguistic correctness is not established by schema validation."
+    },
+    "meaning_vi": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Original short Vietnamese gloss, potentially incomplete or incorrect; not a reference answer."
+    }
+  }
+}

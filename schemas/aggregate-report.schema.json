@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Aggregate output/replay report v1/v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "status", "aggregate_path", "aggregate_sha256", "provenance_path", "provenance_sha256", "manifest_path", "manifest_sha256", "checked_counts", "input_ids", "record_revisions", "review_scope", "native_source_linkage", "checks"],
+  "properties": {
+    "schema": {"enum": ["jp-deck-aggregate-report/v1", "jp-deck-aggregate-report/v2"]},
+    "status": {"const": "pass"},
+    "aggregate_path": {"type": "string", "minLength": 1},
+    "aggregate_sha256": {"$ref": "#/$defs/hash"},
+    "provenance_path": {"type": "string", "minLength": 1},
+    "provenance_sha256": {"$ref": "#/$defs/hash"},
+    "manifest_path": {"type": "string", "minLength": 1},
+    "manifest_sha256": {"$ref": "#/$defs/hash"},
+    "checked_counts": {"type": "object", "additionalProperties": false, "required": ["master_records", "batches", "output_records", "unique_ids", "unique_expressions"], "properties": {"master_records": {"type": "integer", "minimum": 1}, "batches": {"type": "integer", "minimum": 1}, "output_records": {"type": "integer", "minimum": 1}, "unique_ids": {"type": "integer", "minimum": 1}, "unique_expressions": {"type": "integer", "minimum": 1}}},
+    "input_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "record_revisions": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1}},
+    "review_scope": {"enum": ["structure-and-collocation-attestation/v1", "schema-first-sampled-source/v1"]},
+    "native_source_linkage": {"type": "object", "additionalProperties": false, "required": ["verified", "evidence"], "properties": {"verified": {"type": "boolean"}, "evidence": {"type": "object"}}},
+    "checks": {"type": "object", "additionalProperties": false, "required": ["acceptance", "manifest", "membership", "payload", "schema", "references", "render", "provenance"], "properties": {"acceptance": {"const": true}, "manifest": {"const": true}, "membership": {"const": true}, "payload": {"const": true}, "schema": {"const": true}, "references": {"const": true}, "render": {"const": true}, "provenance": {"const": true}}}
+  },
+  "$defs": {"hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}

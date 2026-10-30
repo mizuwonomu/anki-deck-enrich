@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MiMi human disposition v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "batch_id", "artifact_path", "artifact_sha256", "review_path", "review_sha256", "record_revisions", "findings"],
+  "properties": {
+    "schema": {"const": "jp-deck-human-disposition/v1"},
+    "batch_id": {"type": "string", "minLength": 1},
+    "artifact_path": {"type": "string", "minLength": 1},
+    "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "review_path": {"type": "string", "minLength": 1},
+    "review_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "record_revisions": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer", "minimum": 1}},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}}
+  },
+  "$defs": {
+    "finding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["input_id", "path", "status", "requires_correction", "observation"],
+      "properties": {
+        "input_id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "pattern": "^(?:/(?:[^~/]|~[01])*)*$"},
+        "status": {"enum": ["supported", "unverified", "contradicted"]},
+        "requires_correction": {"type": "boolean"},
+        "observation": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

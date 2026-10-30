@@ -1,0 +1,35 @@
+# Credentials and local agent/runtime state (never export or publish).
+.env
+.env.*
+.venv/
+__pycache__/
+.pytest_cache/
+.codex/
+.pi/
+
+# Project knowledge is public guidance except local session handoffs and source
+# research: the hash-pinned Tango snapshot quotes third-party deck rows and must
+# stay in place because configs and source maps bind its exact path and SHA-256.
+/.knowledge/handoffs/
+/.knowledge/sources/
+
+# Real private data, operational runs and local outputs stay in the workspace only.
+/datasets/
+/jobs/
+/artifacts/
+/archives/
+*.apkg
+
+# Root operational configs contain private machine/source bindings; only the
+# authored synthetic demonstration configuration is public.
+/configs/*.yaml
+!/configs/synthetic-demo.yaml
+
+# Real Tango N1 / MiMi fixtures (raw notes, accepted revisions, source maps,
+# research expectations and their configs) stay local; only tests/fixtures/synthetic/ is public.
+/tests/fixtures/tango_n1_mimi/
+
+# Windows filesystem metadata is not a project asset.
+**/Zone.Identifier
+*.Zone.Identifier
+*:Zone.Identifier

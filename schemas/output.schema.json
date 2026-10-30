@@ -1,0 +1,641 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Japanese vocabulary enriched output v0",
+  "description": "Translator-owned research record. Separate from source input, reviewer verdicts, and Anki fields. Structural validity does not establish linguistic correctness or reference integrity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "input_id",
+    "revision",
+    "headword",
+    "senses",
+    "examples",
+    "collocations",
+    "related_terms",
+    "confusables",
+    "sources",
+    "uncertainties"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0"
+    },
+    "input_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S",
+      "description": "Must resolve to the assigned unchanged source input id."
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "headword": {
+      "$ref": "#/$defs/headword"
+    },
+    "senses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sense"
+      },
+      "minItems": 1
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/example"
+      }
+    },
+    "collocations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/collocation"
+      }
+    },
+    "related_terms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/related_term"
+      }
+    },
+    "confusables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/confusable"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/uncertainty"
+      }
+    }
+  },
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "claim_path"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "claim_path": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+          "description": "JSON Pointer into this output record; target existence is checked separately."
+        }
+      }
+    },
+    "headword": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expression",
+        "reading",
+        "pos",
+        "evidence_refs"
+      ],
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Kana reading, not audio or HTML."
+        },
+        "pos": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      }
+    },
+    "sense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sense_id",
+        "meaning_vi",
+        "explanation_vi",
+        "evidence_refs"
+      ],
+      "properties": {
+        "sense_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "meaning_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "example_id",
+        "sense_id",
+        "sentence_ja",
+        "reading",
+        "translation_vi",
+        "origin",
+        "origin_source_ids",
+        "evidence_refs"
+      ],
+      "properties": {
+        "example_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sense_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sentence_ja": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "translation_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "origin": {
+          "enum": [
+            "quoted",
+            "adapted",
+            "generated"
+          ]
+        },
+        "origin_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "origin": {
+                "enum": [
+                  "quoted",
+                  "adapted"
+                ]
+              }
+            },
+            "required": [
+              "origin"
+            ]
+          },
+          "then": {
+            "properties": {
+              "origin_source_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "frequency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "count",
+        "corpus",
+        "query",
+        "source_id"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "corpus": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "query": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    },
+    "collocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collocation_id",
+        "sense_id",
+        "expression",
+        "reading",
+        "meaning_vi",
+        "usage_vi",
+        "frequency",
+        "evidence_refs"
+      ],
+      "properties": {
+        "collocation_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sense_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "meaning_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "usage_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "frequency": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/frequency"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      }
+    },
+    "related_term": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_id",
+        "sense_id",
+        "expression",
+        "reading",
+        "relationship",
+        "note_vi",
+        "evidence_refs"
+      ],
+      "properties": {
+        "relation_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sense_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "relationship": {
+          "enum": [
+            "synonym",
+            "near_synonym",
+            "related"
+          ]
+        },
+        "note_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Explain relation and limits of interchangeability; no automatic equivalence."
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      }
+    },
+    "confusable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confusable_id",
+        "sense_id",
+        "expression",
+        "reading",
+        "distinction_vi",
+        "contrast_examples",
+        "evidence_refs"
+      ],
+      "properties": {
+        "confusable_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "sense_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "expression": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "distinction_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "contrast_examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contrast_example"
+          }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      }
+    },
+    "contrast_example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sentence_ja",
+        "reading",
+        "translation_vi",
+        "origin",
+        "origin_source_ids",
+        "evidence_refs"
+      ],
+      "properties": {
+        "sentence_ja": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "reading": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "translation_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "origin": {
+          "enum": [
+            "quoted",
+            "adapted",
+            "generated"
+          ]
+        },
+        "origin_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidence"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "origin": {
+                "enum": [
+                  "quoted",
+                  "adapted"
+                ]
+              }
+            },
+            "required": [
+              "origin"
+            ]
+          },
+          "then": {
+            "properties": {
+              "origin_source_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "provider",
+        "underlying_source",
+        "url",
+        "locator",
+        "accessed_on",
+        "observation",
+        "attribution",
+        "license"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "provider": {
+          "enum": [
+            "jmdict",
+            "tatoeba",
+            "weblio",
+            "twc"
+          ]
+        },
+        "underlying_source": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Entry/sentence ID, sense locator, or exact corpus/search query."
+        },
+        "accessed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "observation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "description": "Concise observation of actual source content; not necessarily a direct quotation."
+        },
+        "attribution": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "issue_vi"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$",
+          "description": "JSON Pointer into this output record; target existence is checked separately."
+        },
+        "issue_vi": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      }
+    }
+  }
+}
